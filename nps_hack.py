@@ -1,6 +1,7 @@
 import requests
 import json
 import time
+import subprocess
 
 def _get_number_of_available_day_passes_on_given_day(year, month, day):
     '''Returns the number of yosemite available day passes on a given day of the year.
@@ -29,4 +30,17 @@ def notify_when_day_pass_is_available(year, month, day):
 
     print(f'Day passes are available on {year}, {month}, {day}')
 
+    applescript = """
+    display dialog "Yosemite day pass available, check the dates you wanted." ¬
+    with title "Day pass" ¬
+    with icon caution ¬
+    buttons {"OK"}
+    """
+
+    subprocess.call("osascript -e '{}'".format(applescript), shell=True)
+
+
+# Replace this with the dates you want
+# Simply save this file somethere on your Apple computer and run "python nps_hack.py"
+# You might need install Anaconda python in order to run this since it uses the "requests" module above.
 notify_when_day_pass_is_available('2020', '09', '04')
