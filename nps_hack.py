@@ -16,6 +16,20 @@ def _get_number_of_available_day_passes_on_given_day(year, month, day):
         f'https://www.recreation.gov/api/ticket/availability/facility/300015/monthlyAvailabilitySummaryView?year={year}&month={month}&inventoryBucket=FIT',
         headers={'user-agent': user_agent}
     )
+
+    try:
+        response.raise_for_status()
+    except:
+        applescript = """
+        display dialog "Error fetching nps data." ¬
+        with title "Check the day pass scripts" ¬
+        with icon caution ¬
+        buttons {"OK"}
+        """
+
+        subprocess.call("osascript -e '{}'".format(applescript), shell=True)
+        raise
+
     dates_json = json.loads(response.text)
 
     return dates_json['facility_availability_summary_view_by_local_date'][f'{year}-{month}-{day}']['tour_availability_summary_view_by_tour_id']['3000']['reservable']
